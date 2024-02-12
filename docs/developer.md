@@ -32,16 +32,16 @@ In order to automatically push Docker containers, you must add your docker usern
 
 2. Checkout the new repository
 
-After checking out the repo, create a branch "dev" or "devel" as well as "main"
+After checking out the repo, create a branch "dev" as well as "main"
 
 ```
-git branch devel
+git branch dev
 git branch main
 ```
 With these branches created, switch to the devel branch and start developing.
 
 ```
-git checkout devel
+git checkout dev
 ```
 
 3. Go through the source files and address the sections marked with `//DEV`

@@ -4,7 +4,10 @@ process FASTP {
     
     label 'short_parallel'
 
-    container 'quay.io/biocontainers/fastp:0.23.2--h5f740d0_3'
+    conda "bioconda::fastp=0.23.4"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/fastp:0.23.4--hadf994f_2' :
+        'quay.io/biocontainers/fastp:0.23.4--hadf994f_2' }"
 
     input:
     tuple val(meta),path(r1),path(r2)

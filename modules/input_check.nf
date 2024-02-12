@@ -19,8 +19,7 @@ workflow INPUT_CHECK {
 // Function to get list of [ meta, [ fastq_1, fastq_2 ] ]
 def create_fastq_channel(LinkedHashMap row) {
     def meta = [:]
-    meta.patient_id   = row.patient_id
-    meta.sample_id    = row.sample_id
+    meta.sample_id   = row.patient_id
     meta.library_id   = row.library_id
     meta.readgroup_id = row.rgID
 

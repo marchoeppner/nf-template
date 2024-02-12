@@ -1,9 +1,9 @@
 // DEV: rename this file to something matching this workflow, e.g. exome.nf
 
-include { INPUT_CHECK } from '../modules/input_check'
-include { FASTP } from '../modules/fastp/main'
-include { SOFTWARE_VERSIONS } from '../modules/software_versions'
-include { MULTIQC } from './../modules/multiqc/main'
+include { INPUT_CHECK }                 from '../modules/input_check'
+include { FASTP }                       from '../modules/fastp/main'
+include { SOFTWARE_VERSIONS }           from '../modules/software_versions'
+include { MULTIQC }                     from './../modules/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './../modules/custom/dumpsoftwareversions'
 
 ch_versions = Channel.from([])

@@ -1,8 +1,11 @@
 process SAMTOOLS_FAIDX {
 
-    container 'quay.io/biocontainers/samtools:1.16.1--h6899075_1'
-
-    publishDir "${params.outdir}/${assembly}", mode: 'copy'
+    conda "bioconda::samtools=1.19.2"
+    container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
+        'https://depot.galaxyproject.org/singularity/samtools:1.19.2--h50ea8bc_0' :
+        'quay.io/biocontainers/samtools:1.19.2--h50ea8bc_0' }"
+        
+    publishDir "${params.outdir}/SAMTOOLS", mode: 'copy'
 
     tag "${fasta}"
 
