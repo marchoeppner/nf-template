@@ -1,0 +1,26 @@
+name: nextflow linting
+# This workflow is triggered on pushes and PRs to the repository to ensure
+# valid code is being contributed. 
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+  release:
+    types: [published]
+
+jobs:
+  groovy-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+
+      - name: Install groovy lint
+        run: npm install npm-groovy-lint
+
+      - name: Run groovy lint check
+        run: npm-groovy-lint ${GITHUB_WORKSPACE}
+
