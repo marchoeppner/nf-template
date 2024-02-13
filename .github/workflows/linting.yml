@@ -15,9 +15,9 @@ jobs:
   groovy-lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
 
       - name: Install groovy lint
         run: npm install -g npm-groovy-lint
