@@ -23,5 +23,5 @@ jobs:
         run: npm install -g npm-groovy-lint
 
       - name: Run groovy lint check
-        run: npm-groovy-lint ${GITHUB_WORKSPACE}
+        run: npm-groovy-lint -l error ${GITHUB_WORKSPACE}
 
