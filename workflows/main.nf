@@ -11,15 +11,14 @@ multiqc_files = Channel.from([])
 
 // DEV: Rename block to something matching this workflow, e.g. EXOME
 workflow MAIN {
-
     take:
     samplesheet
-	
+
     main:
 
     // DEV: Make sure this module is compatible with the samplesheet format you create
     INPUT_CHECK(samplesheet)
-	
+
     FASTP(
         INPUT_CHECK.out.reads
     )
@@ -29,12 +28,12 @@ workflow MAIN {
 
     SOFTWARE_VERSIONS(
         ch_versions.collect()
-    )		
-	
-    CUSTOM_DUMPSOFTWAREVERSIONS (
+    )
+
+    CUSTOM_DUMPSOFTWAREVERSIONS(
         ch_versions.unique().collectFile(name: 'collated_versions.yml')
     )
-	
+
     multiqc_files = multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml)
 
     MULTIQC(
@@ -43,5 +42,4 @@ workflow MAIN {
 
     emit:
     qc = MULTIQC.out.html
-	
 }

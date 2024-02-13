@@ -1,6 +1,6 @@
 #!/usr/bin/env nextflow
 
-nextflow.enable.dsl=2
+nextflow.enable.dsl = 2
 
 // DEV: Update this block with a description and the name of the pipeline
 /**
@@ -18,14 +18,14 @@ git@github.com:marchoeppner/pipeline.git
 // Pipeline version
 params.version = workflow.manifest.version
 
-def summary = [:]
+summary = [:]
 
-run_name = ( params.run_name == false) ? "${workflow.sessionId}" : "${params.run_name}"
+run_name = (params.run_name == false) ? "${workflow.sessionId}" : "${params.run_name}"
 
 WorkflowMain.initialise(workflow, params, log)
 
 // DEV: Rename this and the file under lib/ to something matching this pipeline (e.g. WorkflowAmplicons)
-WorkflowPipeline.initialise( params, log)
+WorkflowPipeline.initialise(params, log)
 
 // DEV: Rename this to something matching this pipeline, e.g. "AMPLICONS"
 include { MAIN } from './workflows/main'
@@ -33,7 +33,6 @@ include { MAIN } from './workflows/main'
 multiqc_report = Channel.from([])
 
 workflow {
-
     // DEV: Rename to something matching this pipeline (see above)
     MAIN()
 
@@ -41,11 +40,12 @@ workflow {
 }
 
 workflow.onComplete {
-    log.info "========================================="
-    log.info "Duration:		$workflow.duration"
-    log.info "========================================="
+    hline = '========================================='
+    log.info hline
+    log.info "Duration: $workflow.duration"
+    log.info hline
 
-    def emailFields = [:]
+    emailFields = [:]
     emailFields['version'] = workflow.manifest.version
     emailFields['session'] = workflow.sessionId
     emailFields['runName'] = run_name
@@ -65,40 +65,39 @@ workflow.onComplete {
     emailFields['manifest'] = workflow.manifest
     emailFields['summary'] = summary
 
-    email_info = ""
+    email_info = ''
     for (s in emailFields) {
         email_info += "\n${s.key}: ${s.value}"
     }
 
-    def outputDir = new File( "${params.outdir}/pipeline_info/" )
-    if( !outputDir.exists() ) {
+    outputDir = new File("${params.outdir}/pipeline_info/")
+    if (!outputDir.exists()) {
         outputDir.mkdirs()
     }
 
-    def outputTf = new File( outputDir, "pipeline_report.txt" )
-    outputTf.withWriter { w -> w << email_info }	
+    outputTf = new File(outputDir, 'pipeline_report.txt')
+    outputTf.withWriter { w -> w << email_info }
 
    // make txt template
-    def engine = new groovy.text.GStringTemplateEngine()
+    engine = new groovy.text.GStringTemplateEngine()
 
-    def tf = new File("$baseDir/assets/email_template.txt")
-    def txtTemplate = engine.createTemplate(tf).make(emailFields)
-    def email_txt = txtTemplate.toString()
+    tf = new File("$baseDir/assets/email_template.txt")
+    txtTemplate = engine.createTemplate(tf).make(emailFields)
+    emailText = txtTemplate.toString()
 
     // make email template
-    def hf = new File("$baseDir/assets/email_template.html")
-    def htmlTemplate = engine.createTemplate(hf).make(emailFields)
-    def emailHtml = htmlTemplate.toString()
+    hf = new File("$baseDir/assets/email_template.html")
+    htmlTemplate = engine.createTemplate(hf).make(emailFields)
+    emailHtml = htmlTemplate.toString()
 
-    def subject = "Pipeline finished ($run_name)."
+    subject = "Pipeline finished ($run_name)."
 
     if (params.email) {
-
-        def mqcReport = null
+        mqcReport = null
         try {
             if (workflow.success && !params.skip_multiqc) {
                 mqcReport = multiqc_report.getVal()
-                if (mqcReport.getClass() == ArrayList){
+                if (mqcReport.getClass() == ArrayList) {
                     // DEV: Update name of pipeline
                     log.warn "[Pipeline] Found multiple reports from process 'multiqc', will use only one"
                     mqcReport = mqcReport[0]
@@ -106,24 +105,25 @@ workflow.onComplete {
             }
         } catch (all) {
             // DEV: Update name of pipeline
-            log.warn "[PipelineName] Could not attach MultiQC report to summary email"
+            log.warn '[PipelineName] Could not attach MultiQC report to summary email'
         }
 
-        def smailFields = [ email: params.email, subject: subject, email_txt: email_txt, 
-            emailHtml: emailHtml, baseDir: "$baseDir", mqcFile: mqcReport, mqcMaxSize: params.maxMultiqcEmailFileSize.toBytes() ]
-        def sf = new File("$baseDir/assets/sendmailTemplate.txt")	
-        def sendmailTemplate = engine.createTemplate(sf).make(smailFields)
-        def sendmailHtml = sendmailTemplate.toString()
+        smailFields = [ email: params.email, subject: subject, emailText: emailText,
+            emailHtml: emailHtml, baseDir: "$baseDir", mqcFile: mqcReport,
+            mqcMaxSize: params.maxMultiqcEmailFileSize.toBytes()
+        ]
+        sf = new File("$baseDir/assets/sendmailTemplate.txt")
+        sendmailTemplate = engine.createTemplate(sf).make(smailFields)
+        sendmailHtml = sendmailTemplate.toString()
 
-    try {
-        if( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
+        try {
+            if (params.plaintext_email) { throw GroovyException('Send plaintext e-mail, not HTML') }
             // Try to send HTML e-mail using sendmail
             [ 'sendmail', '-t' ].execute() << sendmailHtml
         } catch (all) {
             // Catch failures and try with plaintext
-            [ 'mail', '-s', subject, params.email ].execute() << email_txt
+            [ 'mail', '-s', subject, params.email ].execute() << emailText
         }
     }
-
 }
 

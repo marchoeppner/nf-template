@@ -10,12 +10,11 @@ class WorkflowMain {
     // Validate parameters and print summary to screen
     //
     public static void initialise(workflow, params, log) {
-
         log.info header(workflow)
 
         // Print help to screen if required
         if (params.help) {
-            log.info help(workflow, params, log)
+            log.info help(workflow)
             System.exit(0)
         }
     }
@@ -32,7 +31,7 @@ class WorkflowMain {
         return headr
     }
 
-    public static String help(workflow, params, log) {
+    public static String help(workflow) {
         def command = "nextflow run ${workflow.manifest.name} --input some_file.csv --email me@gmail.com"
         def helpString = ''
         // Help message

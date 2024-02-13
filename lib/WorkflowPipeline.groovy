@@ -7,13 +7,11 @@ class WorkflowPipeline {
     //
     // Check and validate parameters
     //
-    public static void initialise(params, log) {
-
+    public static void initialise(Map params, Map log) {
         if (!params.run_name) {
-        log.info  "Must provide a run_name (--run_name)"
+            log.info 'Must provide a run_name (--run_name)'
             System.exit(1)
         }
-
     }
 
 }

@@ -8,22 +8,22 @@ workflow INPUT_CHECK {
 
     main:
     samplesheet
-        .splitCsv ( header:true, sep:',' )
+        .splitCsv(header:true, sep:',')
         .map { fastq_channel_from_hash(it) }
         .set { reads }
 
     emit:
-    reads                                     // channel: [ val(meta), [ reads ] ]
+    reads // channel: [ val(meta), [ reads ] ]
 }
 
 // Function to get list of [ meta, [ fastq_1, fastq_2 ] ]
 def fastq_channel_from_hash(LinkedHashMap row) {
-    def meta = [:]
+    meta = [:]
     meta.sample_id    = row.patient_id
     meta.library_id   = row.library_id
     meta.readgroup_id = row.rgID
 
-    def array = []
+    array = []
     if (!file(row.R1).exists()) {
         exit 1, "ERROR: Please check input samplesheet -> Read 1 FastQ file does not exist!\n${row.R1}"
     }

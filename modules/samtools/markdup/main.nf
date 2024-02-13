@@ -1,9 +1,8 @@
 process SAMTOOLS_MARKDUP {
-
-    conda "bioconda::samtools=1.19.2"
+    conda 'bioconda::samtools=1.19.2'
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/samtools:1.19.2--h50ea8bc_0' :
-        'quay.io/biocontainers/samtools:1.19.2--h50ea8bc_0' }"	
+        'quay.io/biocontainers/samtools:1.19.2--h50ea8bc_0' }"
 
     label 'medium_parallel'
 
@@ -12,19 +11,19 @@ process SAMTOOLS_MARKDUP {
     publishDir "${params.outdir}/${meta.sample_id}/", mode: 'copy'
 
     input:
-    tuple val(meta),path(merged_bam),path(merged_bam_index)
-    tuple path(fasta),path(fai),path(dict)
+    tuple val(meta), path(merged_bam), path(merged_bam_index)
+    tuple path(fasta), path(fai), path(dict)
 
     output:
-    tuple val(meta), path(outfile_bam),path(outfile_bai), emit: bam
+    tuple val(meta), path(outfile_bam), path(outfile_bai), emit: bam
     path(outfile_metrics), emit: report
     path("versions.yml"), emit: versions
 
     script:
-    def prefix = "${meta.sample_id}-dedup"
-    outfile_bam = prefix + ".bam"
-    outfile_bai = prefix + ".bam.bai"
-    outfile_metrics = prefix + "_duplicate_metrics.txt"
+    namePrefix = "${meta.sample_id}-dedup"
+    outfile_bam = namePrefix + '.bam'
+    outfile_bai = namePrefix + '.bam.bai'
+    outfile_metrics = namePrefix + '_duplicate_metrics.txt'
 
     """
     samtools markdup -@ ${task.cpus} --reference $fasta $merged_bam $outfile_bam
@@ -37,6 +36,5 @@ process SAMTOOLS_MARKDUP {
     END_VERSIONS
 
     """
-
 }
 
