@@ -1,7 +1,6 @@
 //
 // This file holds several functions specific to the workflow/esga.nf in the nf-core/esga pipeline
 //
-
 class WorkflowMain {
 
     //
@@ -24,10 +23,10 @@ class WorkflowMain {
     // DEV: Change name of the pipeline below
     public static String header(workflow) {
         def headr = ''
-        def info_line = "${workflow.manifest.description} | version ${workflow.manifest.version}"
+        def infoLine = "${workflow.manifest.description} | version ${workflow.manifest.version}"
         headr = """
     ===============================================================================
-    ${info_line}
+    ${infoLine}
     ===============================================================================
     """
         return headr
@@ -35,11 +34,11 @@ class WorkflowMain {
 
     public static String help(workflow, params, log) {
         def command = "nextflow run ${workflow.manifest.name} --input some_file.csv --email me@gmail.com"
-        def help_string = ''
+        def helpString = ''
         // Help message
-        help_string = """
+        helpString = """
 
-            Usage: nextflow run ikmb/pipeline -samples Samples.csv
+            Usage: $command
 
             Required parameters:
             --input                        The primary pipeline input (typically a CSV file)
@@ -49,7 +48,7 @@ class WorkflowMain {
             Output:
             --outdir                       Local directory to which all output is written (default: results)
         """
-        return help_string
+        return helpString
     }
 
 }

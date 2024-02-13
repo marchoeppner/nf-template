@@ -92,6 +92,22 @@ nextflow run my/pipeline -profile standard,test
 
 Here, standard refers to the default site configuration ('standard') - change it if you need to run this pipeline under a different profile. 
 
+## Linting
+
+Nextflow does not have a dedicated linting tool. However, since most of nextflow is actually Groovy, the groovy linting suite works just fine, I find. I would strongly recommend setting this up in a [conda] environment, but it should also work on your *nix system directly (albeit with some minor pitfalls re: java version)
+
+```
+conda create -n nf-lint nodejs openjdk=17.0.10
+conda activate nf-lint
+npm install -g npm-groovy-lint
+```
+
+In your pipeline directory, you can check all the files in one go as follows:
+
+```
+npm-groovy-lint
+```
+
 ## Sending report emails
 
 This template is set up to send the final QC report via Email (--email you@gmail.com). This requires for sendmail to be configured on the executing node/computer. 

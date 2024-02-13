@@ -45,63 +45,63 @@ workflow.onComplete {
     log.info "Duration:		$workflow.duration"
     log.info "========================================="
 
-    def email_fields = [:]
-    email_fields['version'] = workflow.manifest.version
-    email_fields['session'] = workflow.sessionId
-    email_fields['runName'] = run_name
-    email_fields['success'] = workflow.success
-    email_fields['dateStarted'] = workflow.start
-    email_fields['dateComplete'] = workflow.complete
-    email_fields['duration'] = workflow.duration
-    email_fields['exitStatus'] = workflow.exitStatus
-    email_fields['errorMessage'] = (workflow.errorMessage ?: 'None')
-    email_fields['errorReport'] = (workflow.errorReport ?: 'None')
-    email_fields['commandLine'] = workflow.commandLine
-    email_fields['projectDir'] = workflow.projectDir
-    email_fields['script_file'] = workflow.scriptFile
-    email_fields['launchDir'] = workflow.launchDir
-    email_fields['user'] = workflow.userName
-    email_fields['Pipeline script hash ID'] = workflow.scriptId
-    email_fields['manifest'] = workflow.manifest
-    email_fields['summary'] = summary
+    def emailFields = [:]
+    emailFields['version'] = workflow.manifest.version
+    emailFields['session'] = workflow.sessionId
+    emailFields['runName'] = run_name
+    emailFields['success'] = workflow.success
+    emailFields['dateStarted'] = workflow.start
+    emailFields['dateComplete'] = workflow.complete
+    emailFields['duration'] = workflow.duration
+    emailFields['exitStatus'] = workflow.exitStatus
+    emailFields['errorMessage'] = (workflow.errorMessage ?: 'None')
+    emailFields['errorReport'] = (workflow.errorReport ?: 'None')
+    emailFields['commandLine'] = workflow.commandLine
+    emailFields['projectDir'] = workflow.projectDir
+    emailFields['script_file'] = workflow.scriptFile
+    emailFields['launchDir'] = workflow.launchDir
+    emailFields['user'] = workflow.userName
+    emailFields['Pipeline script hash ID'] = workflow.scriptId
+    emailFields['manifest'] = workflow.manifest
+    emailFields['summary'] = summary
 
     email_info = ""
-    for (s in email_fields) {
+    for (s in emailFields) {
         email_info += "\n${s.key}: ${s.value}"
     }
 
-    def output_d = new File( "${params.outdir}/pipeline_info/" )
-    if( !output_d.exists() ) {
-        output_d.mkdirs()
+    def outputDir = new File( "${params.outdir}/pipeline_info/" )
+    if( !outputDir.exists() ) {
+        outputDir.mkdirs()
     }
 
-    def output_tf = new File( output_d, "pipeline_report.txt" )
-    output_tf.withWriter { w -> w << email_info }	
+    def outputTf = new File( outputDir, "pipeline_report.txt" )
+    outputTf.withWriter { w -> w << email_info }	
 
    // make txt template
     def engine = new groovy.text.GStringTemplateEngine()
 
     def tf = new File("$baseDir/assets/email_template.txt")
-    def txt_template = engine.createTemplate(tf).make(email_fields)
-    def email_txt = txt_template.toString()
+    def txtTemplate = engine.createTemplate(tf).make(emailFields)
+    def email_txt = txtTemplate.toString()
 
     // make email template
     def hf = new File("$baseDir/assets/email_template.html")
-    def html_template = engine.createTemplate(hf).make(email_fields)
-    def email_html = html_template.toString()
+    def htmlTemplate = engine.createTemplate(hf).make(emailFields)
+    def emailHtml = htmlTemplate.toString()
 
     def subject = "Pipeline finished ($run_name)."
 
     if (params.email) {
 
-        def mqc_report = null
+        def mqcReport = null
         try {
             if (workflow.success && !params.skip_multiqc) {
-                mqc_report = multiqc_report.getVal()
-                if (mqc_report.getClass() == ArrayList){
+                mqcReport = multiqc_report.getVal()
+                if (mqcReport.getClass() == ArrayList){
                     // DEV: Update name of pipeline
                     log.warn "[Pipeline] Found multiple reports from process 'multiqc', will use only one"
-                    mqc_report = mqc_report[0]
+                    mqcReport = mqcReport[0]
                 }
             }
         } catch (all) {
@@ -109,15 +109,16 @@ workflow.onComplete {
             log.warn "[PipelineName] Could not attach MultiQC report to summary email"
         }
 
-        def smail_fields = [ email: params.email, subject: subject, email_txt: email_txt, email_html: email_html, baseDir: "$baseDir", mqcFile: mqc_report, mqcMaxSize: params.maxMultiqcEmailFileSize.toBytes() ]
-        def sf = new File("$baseDir/assets/sendmail_template.txt")	
-        def sendmail_template = engine.createTemplate(sf).make(smail_fields)
-        def sendmail_html = sendmail_template.toString()
+        def smailFields = [ email: params.email, subject: subject, email_txt: email_txt, 
+            emailHtml: emailHtml, baseDir: "$baseDir", mqcFile: mqcReport, mqcMaxSize: params.maxMultiqcEmailFileSize.toBytes() ]
+        def sf = new File("$baseDir/assets/sendmailTemplate.txt")	
+        def sendmailTemplate = engine.createTemplate(sf).make(smailFields)
+        def sendmailHtml = sendmailTemplate.toString()
 
     try {
         if( params.plaintext_email ){ throw GroovyException('Send plaintext e-mail, not HTML') }
             // Try to send HTML e-mail using sendmail
-            [ 'sendmail', '-t' ].execute() << sendmail_html
+            [ 'sendmail', '-t' ].execute() << sendmailHtml
         } catch (all) {
             // Catch failures and try with plaintext
             [ 'mail', '-s', subject, params.email ].execute() << email_txt
