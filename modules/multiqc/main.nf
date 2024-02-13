@@ -2,12 +2,10 @@ process MULTIQC {
 
     publishDir "${params.outdir}/MultiQC", mode: 'copy'
 
-    conda "bioconda::multiqc=0.19"
+    conda "bioconda::multiqc=1.19"
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/multiqc:1.19--pyhdfd78af_0 :
         'quay.io/biocontainers/multiqc:1.19--pyhdfd78af_0' }"
-
-    container 'quay.io/biocontainers/multiqc:1.12--pyhdfd78af_0'
 
     input:
     path('*')

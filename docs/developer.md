@@ -13,7 +13,7 @@ This pipeline base is organized in the following way:
 
 ## Config files
 
-Some aspects of this code base is controlled by config files. These are:
+Some aspects of this code base are controlled by config files. These are:
 
 /nextflow.config -  this sets some of the command line options and default values
 
@@ -50,7 +50,7 @@ After checking out the repo, create a branch "dev" as well as "main"
 git branch dev
 git branch main
 ```
-With these branches created, switch to the devel branch and start developing.
+With these branches created, switch to the dev branch and start developing.
 
 ```
 git checkout dev
@@ -91,3 +91,7 @@ nextflow run my/pipeline -profile standard,test
 ```
 
 Here, standard refers to the default site configuration ('standard') - change it if you need to run this pipeline under a different profile. 
+
+## Sending report emails
+
+This template is set up to send the final QC report via Email (--email you@gmail.com). This requires for sendmail to be configured on the executing node/computer. 
