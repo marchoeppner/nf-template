@@ -1,0 +1,19 @@
+{
+    "extends" : "recommended", 
+    "rules": {
+        "comments.ClassJavadoc": "off",
+        "formatting.Indentation": {
+            "spacesPerIndentLevel": 4,
+            "severity": "info"
+        },
+        "security.JavaIoPackageAccess": "off",
+        "security.SystemExit": "off",
+        "convention.CompileStatic": "off",
+        "unnecessary.UnnecessaryGetter": "off",
+        "convention.MethodReturnTypeRequired": "off",
+        "convention.MethodParameterTypeRequired": "off",
+        "convention.VariableTypeRequired": "off",
+        "exceptions.MissingNewInThrowStatement": "off",
+        "convention.noDef": "off"
+    }
+}
