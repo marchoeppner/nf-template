@@ -9,12 +9,12 @@ Content-Type: text/html; charset=utf-8
 $email_html
 
 --ikmbmimeboundary
-Content-Type: image/png;name="ikmblogo.png"
+Content-Type: image/png;name="pipelinelogo.png"
 Content-Transfer-Encoding: base64
 Content-ID: <ikmblogo>
-Content-Disposition: inline; filename="ikmblogo.png"
+Content-Disposition: inline; filename="pipelinelogo.png"
 
-<% out << new File("$baseDir/assets/ikmblogo.png").
+<% out << new File("$baseDir/assets/pipelinelogo.png").
   bytes.
   encodeBase64().
   toString().

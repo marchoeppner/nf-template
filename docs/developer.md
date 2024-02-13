@@ -11,6 +11,18 @@ This pipeline base is organized in the following way:
 * `subworkflow/<sub>.nf` - a self-contained processing chain that is part of the larger workflow (e.g. read alignment and dedup in a WGS calling workflow)
 * `modules/<module>.nf` - A command line tool/call that can be imported into a (sub)workflow. 
 
+## Config files
+
+Some aspects of this code base is controlled by config files. These are:
+
+/nextflow.config -  this sets some of the command line options and default values
+
+/conf/resources.config - here you can put some pipeline-internal options, like locations of reference files and the like (assuming you use a generic base directory with fixed folder structure or S3 buckets)
+
+/conf/base.config - this file sets the computing specifications for different types of processes. 
+
+/conf/lsh.config - this is an example of a site-specific config file (set as "standard" profile in nextflow.config), in which you can provide information about your compute environment. Make sure to create a new profile for it too. 
+
 ## Groovy libraries
 
 This pipeline imports a few functions into the nextflow files from lib/ - mostly to keep the actual pipeline code a bit cleaner/more readable. For example, 

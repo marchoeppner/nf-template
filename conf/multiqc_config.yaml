@@ -1,8 +1,8 @@
-title: "Exome pipeline report"
-subtitle: "Best-practice workflow for clinical SNP calling"
-custom_logo: "ikmblogo.png"
-custom_logo_title: "Insitute of Clinical Molecular Biology, Kiel"
-custom_logo_url: "http://www.ikmb.uni-kiel.de"
+title: "Pipeline report"
+subtitle: "Best-practice workflow for EDIT_IN_conf_multiqc_config.yaml"
+custom_logo: "pipelinelogo.png"
+custom_logo_title: "Pipeline title here
+custom_logo_url: "http://www.github.com/marchoeppner"
 
 extra_fn_clean_exts:
     - _R1
@@ -11,16 +11,12 @@ extra_fn_clean_exts:
     - .pass
 
 report_comment: >
-    This report has been generated automatically by the IKMB Diagnostic Exome pipeline.
-    For help interpreting the outputs, please see: https://github.com/ikmb/exome-seq
-
+    This report has been generated automatically by EDIT_IN_conf_multiqc_config.yaml.
+    For help interpreting the outputs, please see: https://github.com/marchoeppner/update_url
 report_header_info:
-    - Contact E-mail: "b.loescher@ikmb.uni-kiel.de"
-    - Application Type: "Whole exome sequencing"
+    - Contact E-mail: "you@gmail.com"
+    - Application Type: "EDIT_IN_conf_multiqc_config.yaml"
 
 top_modules:
     - 'general_stats'
-    - 'picard'
-    - 'picard_hsmetrics'
-    - 'bcftools'
-    - 'sex_check'
+

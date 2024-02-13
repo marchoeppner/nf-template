@@ -11,7 +11,7 @@ Pipeline
 This Pipeline performs ....
 
 ### Homepage / git
-git@github.com:ikmb/pipeline.git
+git@github.com:marchoeppner/pipeline.git
 
 **/
 
@@ -24,10 +24,10 @@ run_name = ( params.run_name == false) ? "${workflow.sessionId}" : "${params.run
 
 WorkflowMain.initialise(workflow, params, log)
 
-// DEV: Rename this and the file under lib/ to something matching this pipeline (e.g. WorkflowExomes)
+// DEV: Rename this and the file under lib/ to something matching this pipeline (e.g. WorkflowAmplicons)
 WorkflowPipeline.initialise( params, log)
 
-// DEV: Rename this to something matching this pipeline, e.g. "EXOMES"
+// DEV: Rename this to something matching this pipeline, e.g. "AMPLICONS"
 include { MAIN } from './workflows/main'
 
 multiqc_report = Channel.from([])
@@ -90,7 +90,7 @@ workflow.onComplete {
     def hf = new File("$baseDir/assets/email_template.html")
     def html_template = engine.createTemplate(hf).make(email_fields)
     def email_html = html_template.toString()
-  
+
     def subject = "Pipeline finished ($run_name)."
 
     if (params.email) {
@@ -120,8 +120,8 @@ workflow.onComplete {
             // Try to send HTML e-mail using sendmail
             [ 'sendmail', '-t' ].execute() << sendmail_html
         } catch (all) {
-          // Catch failures and try with plaintext
-          [ 'mail', '-s', subject, params.email ].execute() << email_txt
+            // Catch failures and try with plaintext
+            [ 'mail', '-s', subject, params.email ].execute() << email_txt
         }
     }
 
