@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-node@v3
 
       - name: Install groovy lint
-        run: npm install npm-groovy-lint
+        run: npm install -g npm-groovy-lint
 
       - name: Run groovy lint check
         run: npm-groovy-lint ${GITHUB_WORKSPACE}
