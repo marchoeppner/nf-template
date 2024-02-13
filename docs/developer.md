@@ -2,6 +2,18 @@
 
 This document is a brief overview of how to use this code base. Some understanding of Nextflow and how it implements DSL2 is assumed. 
 
+## Editor
+
+I personally recommend [Microsoft Visual Studio Code](https://code.visualstudio.com/download) for working on nextflow pipelines. It's free and comes with a variety of free extensions to support your work. 
+
+This template specifically is set up to work with the following VS extensions:
+
+- nextflow
+- prettier
+- groovy-lint
+- TODO highlight
+- Docker
+
 ## Basic concept
 
 This pipeline base is organized in the following way:
@@ -56,7 +68,7 @@ With these branches created, switch to the dev branch and start developing.
 git checkout dev
 ```
 
-3. Go through the source files and address the sections marked with `//DEV`
+3. Go through the source files and address the sections marked with `//TODO`
 
 - Update `nextflow.config' with the name and version of your pipeline, required nextflow version and so on
 - Rename the main workflow file and workflow definition to match your pipeline topic (and update main.nf accordingly)
@@ -82,7 +94,7 @@ It is very much recommended to implement a simple test suite for your pipeline.
 
 A default test profile is already included with this code base - you simply have to update the inputs. These inputs should consist of a highly reduced data set that 
 can be processes in a very short amount of time. An example would be short read data from a small section of the genome only (which you could, for example, extract from a BAM file using 
-coordinates). You get the idea. We try to keep test data in a [shared repository](https://github.com/ikmb/nf-testdata) - you might find something you can use in there, or you could add your own data set. Remember, git has a hard-limit of 50MB for individual files. 
+coordinates). You get the idea. We try to keep test data in a [shared repository](https://github.com/marchoeppner/nf-testdata) - you might find something you can use in there, or you could add your own data set. Remember, git has a hard-limit of 50MB for individual files. 
 
 To run the test, the syntax would be:
 
@@ -107,6 +119,8 @@ In your pipeline directory, you can check all the files in one go as follows:
 ```
 npm-groovy-lint
 ```
+
+You'll note that some obvious errors/warnings are omitted. This behavior is controlled by the settings in .groovylintrc [documentation](https://www.npmjs.com/package/npm-groovy-lint), included with this template. If you need to switch on some stuff, just add it the config file, and vice-versa. 
 
 ## Sending report emails
 

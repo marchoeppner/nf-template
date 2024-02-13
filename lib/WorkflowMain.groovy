@@ -19,7 +19,7 @@ class WorkflowMain {
         }
     }
 
-    // DEV: Change name of the pipeline below
+    // TODO: Change name of the pipeline below
     public static String header(workflow) {
         def headr = ''
         def infoLine = "${workflow.manifest.description} | version ${workflow.manifest.version}"

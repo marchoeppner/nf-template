@@ -1,4 +1,4 @@
-// DEV: This is purely meant as an example!
+// TODO: This is purely meant as an example!
 
 include { SOME_METHOD } from './../modules/some_method/main'
 

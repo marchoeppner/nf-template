@@ -2,7 +2,7 @@
 
 nextflow.enable.dsl = 2
 
-// DEV: Update this block with a description and the name of the pipeline
+// TODO: Update this block with a description and the name of the pipeline
 /**
 ===============================
 Pipeline
@@ -24,16 +24,16 @@ run_name = (params.run_name == false) ? "${workflow.sessionId}" : "${params.run_
 
 WorkflowMain.initialise(workflow, params, log)
 
-// DEV: Rename this and the file under lib/ to something matching this pipeline (e.g. WorkflowAmplicons)
+// TODO: Rename this and the file under lib/ to something matching this pipeline (e.g. WorkflowAmplicons)
 WorkflowPipeline.initialise(params, log)
 
-// DEV: Rename this to something matching this pipeline, e.g. "AMPLICONS"
+// TODO: Rename this to something matching this pipeline, e.g. "AMPLICONS"
 include { MAIN } from './workflows/main'
 
 multiqc_report = Channel.from([])
 
 workflow {
-    // DEV: Rename to something matching this pipeline (see above)
+    // TODO: Rename to something matching this pipeline (see above)
     MAIN()
 
     multiqc_report = multiqc_report.mix(MAIN.out.qc).toList()
@@ -98,13 +98,13 @@ workflow.onComplete {
             if (workflow.success && !params.skip_multiqc) {
                 mqcReport = multiqc_report.getVal()
                 if (mqcReport.getClass() == ArrayList) {
-                    // DEV: Update name of pipeline
+                    // TODO: Update name of pipeline
                     log.warn "[Pipeline] Found multiple reports from process 'multiqc', will use only one"
                     mqcReport = mqcReport[0]
                 }
             }
         } catch (all) {
-            // DEV: Update name of pipeline
+            // TODO: Update name of pipeline
             log.warn '[PipelineName] Could not attach MultiQC report to summary email'
         }
 

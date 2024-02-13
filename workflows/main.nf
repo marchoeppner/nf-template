@@ -1,4 +1,4 @@
-// DEV: rename this file to something matching this workflow, e.g. exome.nf
+// TODO: rename this file to something matching this workflow, e.g. exome.nf
 
 include { INPUT_CHECK }                 from '../modules/input_check'
 include { FASTP }                       from '../modules/fastp/main'
@@ -9,14 +9,14 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from './../modules/custom/dumpsoftwareve
 ch_versions = Channel.from([])
 multiqc_files = Channel.from([])
 
-// DEV: Rename block to something matching this workflow, e.g. EXOME
+// TODO: Rename block to something matching this workflow, e.g. EXOME
 workflow MAIN {
     take:
     samplesheet
 
     main:
 
-    // DEV: Make sure this module is compatible with the samplesheet format you create
+    // TODO: Make sure this module is compatible with the samplesheet format you create
     INPUT_CHECK(samplesheet)
 
     FASTP(
