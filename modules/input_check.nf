@@ -9,7 +9,9 @@ workflow INPUT_CHECK {
     main:
     samplesheet
         .splitCsv(header:true, sep:',')
-        .map { fastq_channel_from_hash(it) }
+        .map { dh ->
+            fastq_channel_from_hash(dh)
+        }
         .set { reads }
 
     emit:
