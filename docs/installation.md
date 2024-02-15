@@ -7,7 +7,7 @@ range of such infrastructures, including Slurm, LSF and SGE - but also Kubernete
 
 Please see conf/lsh.config for an example of how to configure this pipeline for a Slurm queue.
 
-All software is provided through Docker containers - this requires for your compute system to run either Docker or Singularity (more common on HPC systems). Details on how to specify singularity as your container engine are provided in the config file for our lsh system (lsh.config).
+All software is provided through either Conda environments or Docker containers. Consider a Docker-compatible container engine if at all possible (Docker, Singularity, Podman). Conda environments are built on the fly during pipeline execution and only for a given pipeline run, which tends to slow things down quite a bit. Details on how to specify singularity as your container engine are provided in the config file for our lsh system (lsh.config).
 
 With this information in place, you will next have to create an new site-specific profile for your local environment in `nextflow.config` using the following format:
 

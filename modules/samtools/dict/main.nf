@@ -16,7 +16,6 @@ process SAMTOOLS_DICT {
     path("versions.yml"), emit: versions
 
     script:
-    assembly = meta.assembly
     dict = fasta.getBaseName() + '.dict'
 
     """
