@@ -18,8 +18,8 @@ This template specifically is set up to work with the following VS extensions:
 
 This pipeline base is organized in the following way:
 
-* `main.nf` - entry point into the pipeline, imports the core workflow from workflow/<pipeline>.nf
-* `workflow/<pipeline.nf>` - the actual core logic of the pipeline; imports sub-workflows from subworkflow/<sub>.nf
+* `main.nf` - entry point into the pipeline, imports the core workflow from `workflow/<pipeline>.nf`
+* `workflow/<pipeline.nf>` - the actual core logic of the pipeline; imports sub-workflows from `subworkflow/<sub>.nf`
 * `subworkflow/<sub>.nf` - a self-contained processing chain that is part of the larger workflow (e.g. read alignment and dedup in a WGS calling workflow)
 * `modules/<module>.nf` - A command line tool/call that can be imported into a (sub)workflow. 
 
@@ -106,7 +106,7 @@ Here, standard refers to the default site configuration ('standard') - change it
 
 ## Linting
 
-Nextflow does not have a dedicated linting tool. However, since most of nextflow is actually Groovy, the groovy linting suite works just fine, I find. I would strongly recommend setting this up in a [conda] environment, but it should also work on your *nix system directly (albeit with some minor pitfalls re: java version)
+Nextflow does not have a dedicated linting tool. However, since most of nextflow is actually Groovy, the groovy linting suite works just fine, I find. I would strongly recommend setting this up in a [conda](https://github.com/conda-forge/miniforge) environment, but it should also work on your *nix system directly (albeit with some minor pitfalls re: java version)
 
 ```
 conda create -n nf-lint nodejs openjdk=17.0.10
@@ -120,7 +120,8 @@ In your pipeline directory, you can check all the files in one go as follows:
 npm-groovy-lint
 ```
 
-You'll note that some obvious errors/warnings are omitted. This behavior is controlled by the settings in .groovylintrc [documentation](https://www.npmjs.com/package/npm-groovy-lint), included with this template. If you need to switch on some stuff, just add it the config file, and vice-versa. 
+You'll note that some obvious errors/warnings are omitted. This behavior is controlled by the settings in .groovylintrc [documentation](https://www.npmjs.com/package/npm-groovy-lint), included with this template. If you need to switch on some stuff, just add it the config file - and vice-versa. 
+
 
 ## Sending report emails
 
