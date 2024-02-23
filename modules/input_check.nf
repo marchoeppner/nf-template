@@ -9,9 +9,7 @@ workflow INPUT_CHECK {
     main:
     samplesheet
         .splitCsv(header:true, sep:',')
-        .map { dh ->
-            fastq_channel_from_hash(dh)
-        }
+        .map { row -> fastq_channel(row) }
         .set { reads }
 
     emit:
@@ -19,11 +17,11 @@ workflow INPUT_CHECK {
 }
 
 // Function to get list of [ meta, [ fastq_1, fastq_2 ] ]
-def fastq_channel_from_hash(LinkedHashMap row) {
+def fastq_channel(LinkedHashMap row) {
     meta = [:]
     meta.sample_id    = row.patient_id
     meta.library_id   = row.library_id
-    meta.readgroup_id = row.rgID
+    meta.readgroup_id = row.readgroup_id
 
     array = []
     if (!file(row.R1).exists()) {

@@ -2,7 +2,6 @@
 
 include { INPUT_CHECK }                 from '../modules/input_check'
 include { FASTP }                       from '../modules/fastp/main'
-include { SOFTWARE_VERSIONS }           from '../modules/software_versions'
 include { MULTIQC }                     from './../modules/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './../modules/custom/dumpsoftwareversions'
 
@@ -25,10 +24,6 @@ workflow MAIN {
 
     ch_versions = ch_versions.mix(FASTP.out.versions)
     multiqc_files = multiqc_files.mix(FASTP.out.json)
-
-    SOFTWARE_VERSIONS(
-        ch_versions.collect()
-    )
 
     CUSTOM_DUMPSOFTWAREVERSIONS(
         ch_versions.unique().collectFile(name: 'collated_versions.yml')

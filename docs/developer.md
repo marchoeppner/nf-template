@@ -53,11 +53,11 @@ container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity
 
 What does this do? Basically, if conda is enabled as software provider, the specified package will be installed into a process-specific environment. Else, a container is pulled - where the source depends on whether you run Docker (native Docker image) or e.g. Singularity (dedicated singularity image).
 
-We normally use Bioconda as the source for software packages; either directly via conda or through containers that are built directly from Bioconda. You'll not that each Bioconda package lists the matching Biocontainer link. For convenience, it is recommended to provide links to the native Biocontainer Docker container as well as the singularity version hosted by the Galaxy team under [https://depot.galaxyproject.org/singularity/](https://depot.galaxyproject.org/singularity/).
+We normally use Bioconda as the source for software packages; either directly via conda or through containers that are built directly from Bioconda. You'll note that each Bioconda package lists the matching Biocontainer link. For convenience, it is recommended to provide links to the native Biocontainer Docker container as well as the singularity version hosted by the Galaxy team under [https://depot.galaxyproject.org/singularity/](https://depot.galaxyproject.org/singularity/).
 
 There are two situations where this approach will not work (directly). One is the use of multiple software packages in one pipeline process. While this can be done for conda-based provisioning by simply providing the name of multiple packages, it does not work for pre-built containers. Instead, you need a so-called "mulled" container; which are built from two or more Bioconda packages - described [here](https://github.com/BioContainers/multi-package-containers). Sometimes you can be lucky and find existing mulled containers that do what you need. Else - see the description above. 
 
-If mulling containers is not an option, you can also refer to github actions and have the pipeline built its own mulled container. For that, see below. 
+If mulling containers is not an option, you can also refer to github actions and have the pipeline built its own mulled container. For that, see the section about Docker below. 
 
 ## Github workflows
 
@@ -66,6 +66,26 @@ Github supports the automatic execution of specific tasks on code branches, such
 ### Docker containers
 
 In order to automatically push Docker containers, you must add your docker username and API token as secrets to your repository (DOCKERHUB_USERNAME and DOCKERHUB_TOKEN). Secrets can be created under Settings/Secrets and Variables/Actions. Of course, you also need to have an account on Dockerhub and generate a permanent token.  The relevant workflow actions are included in `dot_github/workflows`. These will read the `Dockerfile` from the root of this repository, import environment.yml (if you wish to install conda packages into the container), build the whole thing and push the container to an appropriate dockerhub repository 
+
+### Linting
+
+Nextflow does not have a dedicated linting tool. However, since most of nextflow is actually Groovy, the groovy linting suite works just fine, I find. Linting is set up as an automatic workflow for every push to the TEMPLATE and dev branch as well as pull requests. You may wish to run this stand-alone also, before you commit your code. I would strongly recommend setting this up in a [conda](https://github.com/conda-forge/miniforge) environment, but it should also work on your *nix system directly (albeit with some minor pitfalls re: java version). 
+
+```
+conda create -n nf-lint nodejs openjdk=17.0.10
+conda activate nf-lint
+npm install -g npm-groovy-lint
+```
+
+In your pipeline directory, you can check all the files in one go as follows:
+
+```
+npm-groovy-lint
+```
+
+You'll note that some obvious errors/warnings are omitted. This behavior is controlled by the settings in .groovylintrc [documentation](https://www.npmjs.com/package/npm-groovy-lint), included with this template. If you need to switch on some stuff, just add it the config file - and vice-versa.
+
+Make sure that the local linting produces *no* messages (info, warning, error) or the automatic action will throw an error and flag the commit as "failed linting". This is not a deal breaker, but in principle should be fixed before merging into the `main` branch. 
 
 ## How to start
 
@@ -104,16 +124,14 @@ git checkout dev
 
 6. Build all the necessary modules in `modules/`, using `modules/fastp/main.nf` as a template
    - Use a subfolder for each software package and folders therein for sub-functions of a given tool (e.g. samtools)
-   - Each module should include a `container` statement to specify which software container is to be used
+   - Each module should include a `conda/container` statement to specify which software package is to be used
    - Each module should collect information on the software version(s) of the tools used - see existing modules for examples. 
 
 ## How to test
 
 It is very much recommended to implement a simple test suite for your pipeline. 
 
-A default test profile is already included with this code base - you simply have to update the inputs. These inputs should consist of a highly reduced data set that 
-can be processes in a very short amount of time. An example would be short read data from a small section of the genome only (which you could, for example, extract from a BAM file using 
-coordinates). You get the idea. We try to keep test data in a [shared repository](https://github.com/marchoeppner/nf-testdata) - you might find something you can use in there, or you could add your own data set. Remember, git has a hard-limit of 50MB for individual files. 
+A default test profile is already included with this code base - you simply have to update the inputs. These inputs should consist of a highly reduced data set that can be processes in a very short amount of time. An example would be short read data from a small section of the genome only (which you could, for example, extract from a BAM file using coordinates). You get the idea. We try to keep test data in a [shared repository](https://github.com/marchoeppner/nf-testdata) - you might find something you can use in there, or you could add your own data set. Remember, git has a hard-limit of 50MB for individual files. 
 
 To run the test, the syntax would be:
 
@@ -122,25 +140,6 @@ nextflow run my/pipeline -profile standard,test
 ```
 
 Here, standard refers to the default site configuration ('standard') - change it if you need to run this pipeline under a different profile. 
-
-## Linting
-
-Nextflow does not have a dedicated linting tool. However, since most of nextflow is actually Groovy, the groovy linting suite works just fine, I find. I would strongly recommend setting this up in a [conda](https://github.com/conda-forge/miniforge) environment, but it should also work on your *nix system directly (albeit with some minor pitfalls re: java version)
-
-```
-conda create -n nf-lint nodejs openjdk=17.0.10
-conda activate nf-lint
-npm install -g npm-groovy-lint
-```
-
-In your pipeline directory, you can check all the files in one go as follows:
-
-```
-npm-groovy-lint
-```
-
-You'll note that some obvious errors/warnings are omitted. This behavior is controlled by the settings in .groovylintrc [documentation](https://www.npmjs.com/package/npm-groovy-lint), included with this template. If you need to switch on some stuff, just add it the config file - and vice-versa. 
-
 
 ## Sending report emails
 
