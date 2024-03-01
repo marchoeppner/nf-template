@@ -17,11 +17,14 @@ process SAMTOOLS_AMPLICONCLIP {
     path("versions.yml"), emit: versions
 
     script:
-    bam_masked = bam.getBaseName() + '-amplicon_clipped.bam'
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: bam.getBaseName()
+
+    bam_masked = prefix + '-amplicon_clipped.bam'
     bam_masked_bai = bam_masked + '.bai'
 
     """
-    samtools ampliconclip -b $bed $bam | samtools sort -o $bam_masked
+    samtools ampliconclip $args -b $bed $bam | samtools sort -o $bam_masked
     samtools index $bam_masked
 
     cat <<-END_VERSIONS > versions.yml

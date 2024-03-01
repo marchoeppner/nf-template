@@ -16,11 +16,13 @@ process SAMTOOLS_FAIDX {
     path("versions.yml"), emit: versions
 
     script:
-    assembly = meta.assembly
-    fai = fasta + '.fai'
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: fasta.getName()
+
+    fai = prefix + '.fai'
 
     """
-    samtools faidx $fasta > $fai
+    samtools faidx $args $fasta > $fai
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

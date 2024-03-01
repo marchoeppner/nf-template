@@ -17,11 +17,14 @@ process SAMTOOLS_MERGE {
     path("versions.yml"), emit: versions
 
     script:
-    merged_bam = meta.sample_id + '-merged.bam'
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: meta.sample_id
+
+    merged_bam = prefix + '-merged.bam'
     merged_bam_index = merged_bam + '.bai'
 
     """
-    samtools merge -@ 4 $merged_bam ${aligned_bam_list.join(' ')}
+    samtools merge $args -@ 4 $merged_bam ${aligned_bam_list.join(' ')}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

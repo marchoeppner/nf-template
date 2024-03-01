@@ -1,6 +1,4 @@
 process MULTIQC {
-    publishDir "${params.outdir}/MultiQC", mode: 'copy'
-
     conda 'bioconda::multiqc=1.19'
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/multiqc:1.19--pyhdfd78af_0' :
@@ -10,15 +8,17 @@ process MULTIQC {
     path('*')
 
     output:
-    path('multiqc_report.html'), emit: html
+    path('*multiqc_report.html'), emit: html
     path("versions.yml"), emit: versions
 
     script:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: ''
 
     """
     cp ${params.logo} .
     cp ${baseDir}/assets/multiqc_config.yaml .
-    multiqc .
+    multiqc -n ${prefix}multiqc_report $args .
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

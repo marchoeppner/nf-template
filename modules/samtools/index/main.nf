@@ -14,10 +14,13 @@ process SAMTOOLS_INDEX {
     path("versions.yml"), emit: versions
 
     script:
-    bam_index = bam.getName() + '.bai'
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: bam.getName()
+
+    bam_index = prefix + '.bai'
 
     """
-    samtools index $bam
+    samtools index $args $bam
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
