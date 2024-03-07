@@ -15,7 +15,6 @@ process FASTP {
     path('versions.yml'), emit: versions
 
     script:
-    r1 = file(reads[0])
 
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: r1.getBaseName()
@@ -24,6 +23,8 @@ process FASTP {
 
     json = prefix + '.fastp.json'
     html = prefix + '.fastp.html'
+
+    r1 = reads[0]
 
     if (meta.single_end) {
         r1_trim = r1.getBaseName() + suffix
@@ -40,7 +41,7 @@ process FASTP {
         END_VERSIONS
         """
     } else {
-        r2 = file(reads[1])
+        r2 = reads[1]
         r1_trim = r1.getBaseName() + suffix
         r2_trim = r2.getBaseName() + suffix
         """
