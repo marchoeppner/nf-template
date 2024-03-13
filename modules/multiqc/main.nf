@@ -7,6 +7,8 @@ process MULTIQC {
 
     input:
     path('*')
+    path(config)
+    path(logo)
 
     output:
     path('*multiqc_report.html'), emit: html
@@ -17,8 +19,7 @@ process MULTIQC {
     def prefix = task.ext.prefix ?: ''
 
     """
-    cp ${params.logo} .
-    cp ${baseDir}/assets/multiqc_config.yaml .
+
     multiqc -n ${prefix}multiqc_report $args .
 
     cat <<-END_VERSIONS > versions.yml

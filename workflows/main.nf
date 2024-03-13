@@ -5,6 +5,9 @@ include { FASTP }                       from '../modules/fastp/main'
 include { MULTIQC }                     from './../modules/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './../modules/custom/dumpsoftwareversions'
 
+ch_multiqc_config = params.multiqc_config   ? Channel.fromPath(params.multiqc_config, checkIfExists: true).collect() : Channel.value([])
+ch_multiqc_logo   = params.multiqc_logo     ? Channel.fromPath(params.multiqc_logo, checkIfExists: true).collect() : Channel.value([])
+
 ch_versions = Channel.from([])
 multiqc_files = Channel.from([])
 
