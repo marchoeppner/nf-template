@@ -20,14 +20,17 @@ You can choose one of the following options:
 
 [Conda](https://github.com/conda-forge/miniforge)
 
-The pipeline comes with simple pre-set profiles for all of these as described [here](usage.md); if you plan to use this pipeline regularly, consider adding your own custom profile to our [central repository](https://github.com/marchoeppner/configs) to better leverage your available resources.
+The pipeline comes with simple pre-set profiles for all of these as described [here](usage.md); if you plan to use this pipeline regularly, consider adding your own custom profile to our [central repository](https://github.com/marchoeppner/nf-configs) to better leverage your available resources.
 
 ## Installing the references
 
 This pipeline requires locally stored genomes in fasta format. To build these, do:
 
 ```
-nextflow run marchoeppner/eutaxpro -profile standard,singularity --build_references --run_name build_refs --outdir /path/to/references
+nextflow run marchoeppner/eutaxpro -profile singularity \\
+--build_references \\
+--run_name build_refs \\
+--outdir /path/to/references
 ```
 
 where `/path/to/references` could be something like `/data/pipelines/references` or whatever is most appropriate on your system. 

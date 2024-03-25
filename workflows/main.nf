@@ -1,9 +1,16 @@
 // TODO: rename this file to something matching this workflow, e.g. exome.nf
 
+// Modules
 include { INPUT_CHECK }                 from '../modules/input_check'
 include { FASTP }                       from '../modules/fastp/main'
 include { MULTIQC }                     from './../modules/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './../modules/custom/dumpsoftwareversions'
+
+// Subworkflows
+
+// Channels
+ch_multiqc_config = params.multiqc_config   ? Channel.fromPath(params.multiqc_config, checkIfExists: true).collect()    : []
+ch_multiqc_logo   = params.multiqc_logo     ? Channel.fromPath(params.multiqc_logo, checkIfExists: true).collect()      : []
 
 ch_versions = Channel.from([])
 multiqc_files = Channel.from([])
@@ -32,7 +39,9 @@ workflow MAIN {
     multiqc_files = multiqc_files.mix(CUSTOM_DUMPSOFTWAREVERSIONS.out.mqc_yml)
 
     MULTIQC(
-        multiqc_files.collect()
+        multiqc_files.collect(),
+        ch_multiqc_config,
+        ch_multiqc_logo
     )
 
     emit:
