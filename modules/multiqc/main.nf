@@ -9,8 +9,6 @@ process MULTIQC {
     path('*')
     path(config)
     path(logo)
-    path(config)
-    path(logo)
 
     output:
     path('*multiqc_report.html'), emit: html
@@ -22,7 +20,7 @@ process MULTIQC {
 
     """
 
-    multiqc -n ${prefix}multiqc_report $args .
+    multiqc -n ${prefix}_multiqc_report $args .
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
