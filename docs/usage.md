@@ -2,6 +2,8 @@
 
 [Basic execution](#basic-execution)
 
+[Pipeline version](#specifying-pipeline-version)
+
 [Resources](#resources)
 
 ## Basic execution
@@ -40,6 +42,16 @@ nextflow run marchoeppner/gabi -profile lsh --input samples.csv \\
 ```
 
 In this example, both `--reference_base` and the choice of software provisioning are already set in the local configuration `lsh` and don't have to be provided as command line argument. 
+
+## Specifying pipeline version
+
+If you are running this pipeline in a production setting, you will want to lock the pipeline to a specific version. This is natively supported through nextflow with the `-r` argument:
+
+```bash
+nextflow run marchoeppner/pipeline -profile lsh -r 1.0 <other options here>
+```
+
+The `-r` option specifies a github [release tag](https://github.com/marchoeppner/gabi/releases) or branch, so could also point to `main` for the very latest code release. Please note that every major release of this pipeline (1.0, 2.0 etc) comes with a new reference data set, which has the be [installed](installation.md) separately.
 
 ## Resources
 
