@@ -1,4 +1,4 @@
-// TODO: rename this file to something matching this workflow, e.g. exome.nf
+    // TODO: rename this file to something matching this workflow, e.g. exome.nf
 
 // Modules
 include { INPUT_CHECK }                 from '../modules/input_check'
@@ -6,18 +6,19 @@ include { FASTP }                       from '../modules/fastp/main'
 include { MULTIQC }                     from './../modules/multiqc/main'
 include { CUSTOM_DUMPSOFTWAREVERSIONS } from './../modules/custom/dumpsoftwareversions'
 
-ch_multiqc_config = params.multiqc_config   ? Channel.fromPath(params.multiqc_config, checkIfExists: true).collect() : Channel.value([])
-ch_multiqc_logo   = params.multiqc_logo     ? Channel.fromPath(params.multiqc_logo, checkIfExists: true).collect() : Channel.value([])
-
-ch_versions = Channel.from([])
-multiqc_files = Channel.from([])
 
 // TODO: Rename block to something matching this workflow, e.g. EXOME
 workflow MAIN {
-    take:
-    samplesheet
 
     main:
+
+    ch_multiqc_config = params.multiqc_config   ? Channel.fromPath(params.multiqc_config, checkIfExists: true).collect() : Channel.value([])
+    ch_multiqc_logo   = params.multiqc_logo     ? Channel.fromPath(params.multiqc_logo, checkIfExists: true).collect() : Channel.value([])
+
+    ch_versions = Channel.from([])
+    multiqc_files = Channel.from([])
+
+    samplesheet = params.input ? Channel.fromPath(file(params.input, checkIfExists:true)) : Channel.value([])
 
     // TODO: Make sure this module is compatible with the samplesheet format you create
     INPUT_CHECK(samplesheet)

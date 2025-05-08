@@ -17,7 +17,7 @@ process FASTP {
     script:
 
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: r1.getBaseName()
+    def prefix = task.ext.prefix ?: reads[0].getBaseName()
 
     suffix = '_trimmed.fastq.gz'
 
