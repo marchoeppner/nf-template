@@ -16,18 +16,20 @@ You can choose one of the following options:
 
 [Singularity](https://docs.sylabs.io/guides/3.11/admin-guide/)
 
+[Apptainer](https://apptainer.org/docs/admin/main/installation.html)
+
 [Podman](https://podman.io/docs/installation)
 
 [Conda](https://github.com/conda-forge/miniforge)
 
-The pipeline comes with simple pre-set profiles for all of these as described [here](usage.md); if you plan to use this pipeline regularly, consider adding your own custom profile to our [central repository](https://github.com/marchoeppner/nf-configs) to better leverage your available resources.
+The pipeline comes with simple pre-set profiles for all of these as described [here](usage.md); if you plan to use this pipeline regularly, consider adding your own custom profile to our [central repository](https://github.com/bio-raum/nf-configs) to better leverage your available resources.
 
 ## Installing the references
 
 This pipeline requires locally stored genomes in fasta format. To build these, do:
 
 ```
-nextflow run marchoeppner/eutaxpro -profile singularity \\
+nextflow run marchoeppner/THIS_PIPELINE -profile singularity \\
 --build_references \\
 --run_name build_refs \\
 --outdir /path/to/references
