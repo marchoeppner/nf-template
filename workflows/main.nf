@@ -20,6 +20,8 @@ workflow MAIN {
 
     samplesheet = params.input ? Channel.fromPath(file(params.input, checkIfExists:true)) : Channel.value([])
 
+    pipeline_settings = Channel.fromPath(dumpParametersToJSON(params.outdir)).collect() // All pipelines settings as a JSON file
+
     // TODO: Make sure this module is compatible with the samplesheet format you create
     INPUT_CHECK(samplesheet)
 
@@ -44,4 +46,17 @@ workflow MAIN {
 
     emit:
     qc = MULTIQC.out.html
+}
+
+// turn the summaryMap to a JSON file
+def dumpParametersToJSON(outdir) {
+    def timestamp = new java.util.Date().format('yyyy-MM-dd_HH-mm-ss')
+    def filename  = "params_${timestamp}.json"
+    def temp_pf   = new File(workflow.launchDir.toString(), ".${filename}")
+    def jsonStr   = groovy.json.JsonOutput.toJson(params)
+    temp_pf.text  = groovy.json.JsonOutput.prettyPrint(jsonStr)
+
+    nextflow.extension.FilesEx.copyTo(temp_pf.toPath(), "${outdir}/pipeline_info/params_${timestamp}.json")
+    temp_pf.delete()
+    return file("${outdir}/pipeline_info/params_${timestamp}.json")
 }
